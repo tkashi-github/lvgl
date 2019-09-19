@@ -42,12 +42,16 @@ static bool lv_list_is_list_label(lv_obj_t * list_btn);
  *  STATIC VARIABLES
  **********************/
 #if LV_USE_IMG
-static lv_signal_cb_t img_signal;
+LV_VAL_OBJX_LIST_ATTR static lv_signal_cb_t img_signal;
 #endif
-static lv_signal_cb_t label_signal;
-static lv_signal_cb_t ancestor_page_signal;
-static lv_signal_cb_t ancestor_btn_signal;
-
+LV_VAL_OBJX_LIST_ATTR static lv_signal_cb_t label_signal;
+LV_VAL_OBJX_LIST_ATTR static lv_signal_cb_t ancestor_page_signal;
+LV_VAL_OBJX_LIST_ATTR static lv_signal_cb_t ancestor_btn_signal;
+#if LV_USE_GROUP
+/*Used to make the last clicked button pressed (selected) when the list become focused and
+ * `click_focus == 1`*/
+LV_VAL_OBJX_LIST_ATTR static lv_obj_t * last_clicked_btn;
+#endif
 
 /**********************
  *      MACROS
@@ -63,7 +67,7 @@ static lv_signal_cb_t ancestor_btn_signal;
  * @param copy pointer to a list object, if not NULL then the new object will be copied from it
  * @return pointer to the created list
  */
-lv_obj_t * lv_list_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_LIST_ATTR lv_obj_t * lv_list_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("list create started");
 
@@ -151,7 +155,7 @@ lv_obj_t * lv_list_create(lv_obj_t * par, const lv_obj_t * copy)
  * Delete all children of the scrl object, without deleting scrl child.
  * @param obj pointer to an object
  */
-void lv_list_clean(lv_obj_t * obj)
+LV_FUNC_OBJX_LIST_ATTR void lv_list_clean(lv_obj_t * obj)
 {
     lv_obj_t * scrl = lv_page_get_scrl(obj);
     lv_obj_clean(scrl);
@@ -170,7 +174,7 @@ void lv_list_clean(lv_obj_t * obj)
  * @param txt text of the list element (NULL if unused)
  * @return pointer to the new list element which can be customized (a button)
  */
-lv_obj_t * lv_list_add_btn(lv_obj_t * list, const void * img_src, const char * txt)
+LV_FUNC_OBJX_LIST_ATTR lv_obj_t * lv_list_add_btn(lv_obj_t * list, const void * img_src, const char * txt)
 {
     lv_list_ext_t * ext = lv_obj_get_ext_attr(list);
     ext->size++;
@@ -235,7 +239,7 @@ lv_obj_t * lv_list_add_btn(lv_obj_t * list, const void * img_src, const char * t
  * lv_list_ext_t.size
  * @return true: successfully deleted
  */
-bool lv_list_remove(const lv_obj_t * list, uint16_t index)
+LV_FUNC_OBJX_LIST_ATTR bool lv_list_remove(const lv_obj_t * list, uint16_t index)
 {
     lv_list_ext_t * ext = lv_obj_get_ext_attr(list);
     if(index >= ext->size) return false;
@@ -262,7 +266,7 @@ bool lv_list_remove(const lv_obj_t * list, uint16_t index)
  * @param list pointer to the currently pressed list object
  * @param mode, enable(true)/disable(false) single selected mode.
  */
-void lv_list_set_single_mode(lv_obj_t * list, bool mode)
+LV_FUNC_OBJX_LIST_ATTR void lv_list_set_single_mode(lv_obj_t * list, bool mode)
 {
     lv_list_ext_t * ext = lv_obj_get_ext_attr(list);
 
@@ -277,7 +281,7 @@ void lv_list_set_single_mode(lv_obj_t * list, bool mode)
  * @param btn pointer to a button to select
  *            NULL to not select any buttons
  */
-void lv_list_set_btn_selected(lv_obj_t * list, lv_obj_t * btn)
+LV_FUNC_OBJX_LIST_ATTR void lv_list_set_btn_selected(lv_obj_t * list, lv_obj_t * btn)
 {
     lv_list_ext_t * ext = lv_obj_get_ext_attr(list);
 
@@ -316,7 +320,7 @@ void lv_list_set_btn_selected(lv_obj_t * list, lv_obj_t * btn)
  * @param type which style should be set
  * @param style pointer to a style
  */
-void lv_list_set_style(lv_obj_t * list, lv_list_style_t type, const lv_style_t * style)
+LV_FUNC_OBJX_LIST_ATTR void lv_list_set_style(lv_obj_t * list, lv_list_style_t type, const lv_style_t * style)
 {
     lv_list_ext_t * ext           = lv_obj_get_ext_attr(list);
     lv_btn_style_t btn_style_refr = LV_BTN_STYLE_REL;
@@ -401,7 +405,7 @@ void lv_list_set_style(lv_obj_t * list, lv_list_style_t type, const lv_style_t *
  * Get single button selected mode.
  * @param list pointer to the currently pressed list object.
  */
-bool lv_list_get_single_mode(lv_obj_t * list)
+LV_FUNC_OBJX_LIST_ATTR bool lv_list_get_single_mode(lv_obj_t * list)
 {
     lv_list_ext_t * ext = lv_obj_get_ext_attr(list);
 
@@ -413,7 +417,7 @@ bool lv_list_get_single_mode(lv_obj_t * list)
  * @param btn pointer to list element
  * @return pointer to the text
  */
-const char * lv_list_get_btn_text(const lv_obj_t * btn)
+LV_FUNC_OBJX_LIST_ATTR const char * lv_list_get_btn_text(const lv_obj_t * btn)
 {
     lv_obj_t * label = lv_list_get_btn_label(btn);
     if(label == NULL) return "";
@@ -425,7 +429,7 @@ const char * lv_list_get_btn_text(const lv_obj_t * btn)
  * @param btn pointer to a list element (button)
  * @return pointer to the label from the list element or NULL if not found
  */
-lv_obj_t * lv_list_get_btn_label(const lv_obj_t * btn)
+LV_FUNC_OBJX_LIST_ATTR lv_obj_t * lv_list_get_btn_label(const lv_obj_t * btn)
 {
     lv_obj_t * label = lv_obj_get_child(btn, NULL);
     if(label == NULL) return NULL;
@@ -443,7 +447,7 @@ lv_obj_t * lv_list_get_btn_label(const lv_obj_t * btn)
  * @param btn pointer to a list element (button)
  * @return pointer to the image from the list element or NULL if not found
  */
-lv_obj_t * lv_list_get_btn_img(const lv_obj_t * btn)
+LV_FUNC_OBJX_LIST_ATTR lv_obj_t * lv_list_get_btn_img(const lv_obj_t * btn)
 {
 #if LV_USE_IMG != 0
     lv_obj_t * img = lv_obj_get_child(btn, NULL);
@@ -466,7 +470,7 @@ lv_obj_t * lv_list_get_btn_img(const lv_obj_t * btn)
  * @param prev_btn pointer to button. Search the previous before it.
  * @return pointer to the previous button or NULL when no more buttons
  */
-lv_obj_t * lv_list_get_prev_btn(const lv_obj_t * list, lv_obj_t * prev_btn)
+LV_FUNC_OBJX_LIST_ATTR lv_obj_t * lv_list_get_prev_btn(const lv_obj_t * list, lv_obj_t * prev_btn)
 {
     /* Not a good practice but user can add/create objects to the lists manually.
      * When getting the next button try to be sure that it is at least a button */
@@ -491,7 +495,7 @@ lv_obj_t * lv_list_get_prev_btn(const lv_obj_t * list, lv_obj_t * prev_btn)
  * @param prev_btn pointer to button. Search the next after it.
  * @return pointer to the next button or NULL when no more buttons
  */
-lv_obj_t * lv_list_get_next_btn(const lv_obj_t * list, lv_obj_t * prev_btn)
+LV_FUNC_OBJX_LIST_ATTR lv_obj_t * lv_list_get_next_btn(const lv_obj_t * list, lv_obj_t * prev_btn)
 {
     /* Not a good practice but user can add/create objects to the lists manually.
      * When getting the next button try to be sure that it is at least a button */
@@ -516,7 +520,7 @@ lv_obj_t * lv_list_get_next_btn(const lv_obj_t * list, lv_obj_t * prev_btn)
  * @param btn pointer to a list element (button)
  * @return the index of the button in the list, or -1 of the button not in this list
  */
-int32_t lv_list_get_btn_index(const lv_obj_t * list, const lv_obj_t * btn)
+LV_FUNC_OBJX_LIST_ATTR int32_t lv_list_get_btn_index(const lv_obj_t * list, const lv_obj_t * btn)
 {
     int index = 0;
     if(list == NULL) {
@@ -539,7 +543,7 @@ int32_t lv_list_get_btn_index(const lv_obj_t * list, const lv_obj_t * btn)
  * @param list pointer to a list object
  * @return the number of buttons in the list
  */
-uint16_t lv_list_get_size(const lv_obj_t * list)
+LV_FUNC_OBJX_LIST_ATTR uint16_t lv_list_get_size(const lv_obj_t * list)
 {
     lv_list_ext_t * ext = lv_obj_get_ext_attr(list);
     return ext->size;
@@ -551,7 +555,7 @@ uint16_t lv_list_get_size(const lv_obj_t * list)
  * @param list pointer to a list object
  * @return pointer to the selected button
  */
-lv_obj_t * lv_list_get_btn_selected(const lv_obj_t * list)
+LV_FUNC_OBJX_LIST_ATTR lv_obj_t * lv_list_get_btn_selected(const lv_obj_t * list)
 {
     lv_list_ext_t * ext = lv_obj_get_ext_attr(list);
     return ext->selected_btn;
@@ -574,7 +578,7 @@ lv_layout_t lv_list_get_layout(lv_obj_t * list)
  * @param type which style should be get
  * @return style pointer to a style
  */
-const lv_style_t * lv_list_get_style(const lv_obj_t * list, lv_list_style_t type)
+LV_FUNC_OBJX_LIST_ATTR const lv_style_t * lv_list_get_style(const lv_obj_t * list, lv_list_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_list_ext_t * ext      = lv_obj_get_ext_attr(list);
@@ -603,7 +607,7 @@ const lv_style_t * lv_list_get_style(const lv_obj_t * list, lv_list_style_t type
  * Move the list elements up by one
  * @param list pointer a to list object
  */
-void lv_list_up(const lv_obj_t * list)
+LV_FUNC_OBJX_LIST_ATTR void lv_list_up(const lv_obj_t * list)
 {
     /*Search the first list element which 'y' coordinate is below the parent
      * and position the list to show this element on the bottom*/
@@ -648,7 +652,7 @@ void lv_list_up(const lv_obj_t * list)
  * Move the list elements down by one
  * @param list pointer to a list object
  */
-void lv_list_down(const lv_obj_t * list)
+LV_FUNC_OBJX_LIST_ATTR void lv_list_down(const lv_obj_t * list)
 {
     /*Search the first list element which 'y' coordinate is above the parent
      * and position the list to show this element on the top*/
@@ -689,7 +693,7 @@ void lv_list_down(const lv_obj_t * list)
  * @param btn pointer to a list button to focus
  * @param anim_en LV_ANIM_ON: scroll with animation, LV_ANOM_OFF: without animation
  */
-void lv_list_focus(const lv_obj_t * btn, lv_anim_enable_t anim)
+LV_FUNC_OBJX_LIST_ATTR void lv_list_focus(const lv_obj_t * btn, lv_anim_enable_t anim)
 {
 
 #if LV_USE_ANIMATION == 0
@@ -712,7 +716,7 @@ void lv_list_focus(const lv_obj_t * btn, lv_anim_enable_t anim)
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_list_signal(lv_obj_t * list, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_LIST_ATTR static lv_res_t lv_list_signal(lv_obj_t * list, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -866,7 +870,7 @@ static lv_res_t lv_list_signal(lv_obj_t * list, lv_signal_t sign, void * param)
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_list_btn_signal(lv_obj_t * btn, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_LIST_ATTR static lv_res_t lv_list_btn_signal(lv_obj_t * btn, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -925,7 +929,7 @@ static lv_res_t lv_list_btn_signal(lv_obj_t * btn, lv_signal_t sign, void * para
  * Make a single button selected in the list, deselect others.
  * @param btn pointer to the currently pressed list btn object
  */
-static void lv_list_btn_single_select(lv_obj_t * btn)
+LV_FUNC_OBJX_LIST_ATTR static void lv_list_btn_single_select(lv_obj_t * btn)
 {
     lv_obj_t * list = lv_obj_get_parent(lv_obj_get_parent(btn));
 
@@ -944,7 +948,7 @@ static void lv_list_btn_single_select(lv_obj_t * btn)
  * Check if this is really a list button or another object.
  * @param list_btn List button
  */
-static bool lv_list_is_list_btn(lv_obj_t * list_btn)
+LV_FUNC_OBJX_LIST_ATTR static bool lv_list_is_list_btn(lv_obj_t * list_btn)
 {
     lv_obj_type_t type;
 
@@ -961,7 +965,7 @@ static bool lv_list_is_list_btn(lv_obj_t * list_btn)
  * Check if this is really a list label or another object.
  * @param list_label List label
  */
-static bool lv_list_is_list_label(lv_obj_t * list_label)
+LV_FUNC_OBJX_LIST_ATTR static bool lv_list_is_list_label(lv_obj_t * list_label)
 {
     lv_obj_type_t type;
 
@@ -978,7 +982,7 @@ static bool lv_list_is_list_label(lv_obj_t * list_label)
  * Check if this is really a list image or another object.
  * @param list_image List image
  */
-static bool lv_list_is_list_img(lv_obj_t * list_img)
+LV_FUNC_OBJX_LIST_ATTR static bool lv_list_is_list_img(lv_obj_t * list_img)
 {
     lv_obj_type_t type;
 

@@ -49,9 +49,9 @@ static void lv_ddlist_adjust_height(lv_obj_t * ddlist, lv_anim_value_t height);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_DDLIST_ATTR static lv_signal_cb_t ancestor_signal;
-LV_VAL_OBJX_DDLIST_ATTR static lv_signal_cb_t ancestor_scrl_signal;
-LV_VAL_OBJX_DDLIST_ATTR static lv_design_cb_t ancestor_design;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_scrl_signal;
+LV_BSS_ATTR static lv_design_cb_t ancestor_design;
 
 /**********************
  *      MACROS
@@ -68,7 +68,7 @@ LV_VAL_OBJX_DDLIST_ATTR static lv_design_cb_t ancestor_design;
  * from it
  * @return pointer to the created drop down list
  */
-LV_FUNC_OBJX_DDLIST_ATTR lv_obj_t * lv_ddlist_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_ddlist_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("drop down list create started");
 
@@ -162,7 +162,7 @@ LV_FUNC_OBJX_DDLIST_ATTR lv_obj_t * lv_ddlist_create(lv_obj_t * par, const lv_ob
  * @param ddlist pointer to drop down list object
  * @param options a string with '\n' separated options. E.g. "One\nTwo\nThree"
  */
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_options(lv_obj_t * ddlist, const char * options)
+LV_FUNC_ATTR void lv_ddlist_set_options(lv_obj_t * ddlist, const char * options)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -194,7 +194,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_options(lv_obj_t * ddlist, const cha
  * @param ddlist pointer to drop down list object
  * @param sel_opt id of the selected option (0 ... number of option - 1);
  */
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_selected(lv_obj_t * ddlist, uint16_t sel_opt)
+LV_FUNC_ATTR void lv_ddlist_set_selected(lv_obj_t * ddlist, uint16_t sel_opt)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
     if(ext->sel_opt_id == sel_opt) return;
@@ -215,7 +215,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_selected(lv_obj_t * ddlist, uint16_t
  * @param ddlist pointer to a drop down list
  * @param h the height when the list is opened (0: auto size)
  */
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_fix_height(lv_obj_t * ddlist, lv_coord_t h)
+LV_FUNC_ATTR void lv_ddlist_set_fix_height(lv_obj_t * ddlist, lv_coord_t h)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
     if(ext->fix_height == h) return;
@@ -230,7 +230,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_fix_height(lv_obj_t * ddlist, lv_coo
  * @param ddlist pointer to a drop down list
  * @param w the width when the list is opened (0: auto size)
  */
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_fix_width(lv_obj_t * ddlist, lv_coord_t w)
+LV_FUNC_ATTR void lv_ddlist_set_fix_width(lv_obj_t * ddlist, lv_coord_t w)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
     if(w == 0) {
@@ -254,7 +254,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_fix_width(lv_obj_t * ddlist, lv_coor
  * @param ddlist pointer to drop down list object
  * @param en enable/disable a arrow draw. E.g. "true" for draw.
  */
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_draw_arrow(lv_obj_t * ddlist, bool en)
+LV_FUNC_ATTR void lv_ddlist_set_draw_arrow(lv_obj_t * ddlist, bool en)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -267,7 +267,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_draw_arrow(lv_obj_t * ddlist, bool e
  * @param ddlist pointer to drop down list object
  * @param en enable/disable "stay open" feature
  */
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_stay_open(lv_obj_t * ddlist, bool en)
+LV_FUNC_ATTR void lv_ddlist_set_stay_open(lv_obj_t * ddlist, bool en)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -281,7 +281,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_stay_open(lv_obj_t * ddlist, bool en
  * @param type which style should be set
  * @param style pointer to a style
  */
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_style(lv_obj_t * ddlist, lv_ddlist_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_ddlist_set_style(lv_obj_t * ddlist, lv_ddlist_style_t type, const lv_style_t * style)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -299,7 +299,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_style(lv_obj_t * ddlist, lv_ddlist_s
     }
 }
 
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_align(lv_obj_t * ddlist, lv_label_align_t align)
+LV_FUNC_ATTR void lv_ddlist_set_align(lv_obj_t * ddlist, lv_label_align_t align)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -319,7 +319,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_set_align(lv_obj_t * ddlist, lv_label_al
  * @param ddlist pointer to drop down list object
  * @return the options separated by '\n'-s (E.g. "Option1\nOption2\nOption3")
  */
-LV_FUNC_OBJX_DDLIST_ATTR const char * lv_ddlist_get_options(const lv_obj_t * ddlist)
+LV_FUNC_ATTR const char * lv_ddlist_get_options(const lv_obj_t * ddlist)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
     return lv_label_get_text(ext->label);
@@ -330,7 +330,7 @@ LV_FUNC_OBJX_DDLIST_ATTR const char * lv_ddlist_get_options(const lv_obj_t * ddl
  * @param ddlist pointer to drop down list object
  * @return id of the selected option (0 ... number of option - 1);
  */
-LV_FUNC_OBJX_DDLIST_ATTR uint16_t lv_ddlist_get_selected(const lv_obj_t * ddlist)
+LV_FUNC_ATTR uint16_t lv_ddlist_get_selected(const lv_obj_t * ddlist)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -343,7 +343,7 @@ LV_FUNC_OBJX_DDLIST_ATTR uint16_t lv_ddlist_get_selected(const lv_obj_t * ddlist
  * @param buf pointer to an array to store the string
  * @param buf_size size of `buf` in bytes. 0: to ignore it.
  */
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_get_selected_str(const lv_obj_t * ddlist, char * buf, uint16_t buf_size)
+LV_FUNC_ATTR void lv_ddlist_get_selected_str(const lv_obj_t * ddlist, char * buf, uint16_t buf_size)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -373,7 +373,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_get_selected_str(const lv_obj_t * ddlist
  * @param ddlist pointer to a drop down list object
  * @return the height if the ddlist is opened (0: auto size)
  */
-LV_FUNC_OBJX_DDLIST_ATTR lv_coord_t lv_ddlist_get_fix_height(const lv_obj_t * ddlist)
+LV_FUNC_ATTR lv_coord_t lv_ddlist_get_fix_height(const lv_obj_t * ddlist)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
     return ext->fix_height;
@@ -383,7 +383,7 @@ LV_FUNC_OBJX_DDLIST_ATTR lv_coord_t lv_ddlist_get_fix_height(const lv_obj_t * dd
  * Get arrow draw in a drop down list
  * @param ddlist pointer to drop down list object
  */
-LV_FUNC_OBJX_DDLIST_ATTR bool lv_ddlist_get_draw_arrow(lv_obj_t * ddlist)
+LV_FUNC_ATTR bool lv_ddlist_get_draw_arrow(lv_obj_t * ddlist)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -394,7 +394,7 @@ LV_FUNC_OBJX_DDLIST_ATTR bool lv_ddlist_get_draw_arrow(lv_obj_t * ddlist)
  * Get whether the drop down list stay open after selecting a  value or not
  * @param ddlist pointer to drop down list object
  */
-LV_FUNC_OBJX_DDLIST_ATTR bool lv_ddlist_get_stay_open(lv_obj_t * ddlist)
+LV_FUNC_ATTR bool lv_ddlist_get_stay_open(lv_obj_t * ddlist)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -407,7 +407,7 @@ LV_FUNC_OBJX_DDLIST_ATTR bool lv_ddlist_get_stay_open(lv_obj_t * ddlist)
  * @param type which style should be get
  * @return style pointer to a style
  */
-LV_FUNC_OBJX_DDLIST_ATTR const lv_style_t * lv_ddlist_get_style(const lv_obj_t * ddlist, lv_ddlist_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_ddlist_get_style(const lv_obj_t * ddlist, lv_ddlist_style_t type)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -422,7 +422,7 @@ LV_FUNC_OBJX_DDLIST_ATTR const lv_style_t * lv_ddlist_get_style(const lv_obj_t *
     return NULL;
 }
 
-LV_FUNC_OBJX_DDLIST_ATTR lv_label_align_t lv_ddlist_get_align(const lv_obj_t * ddlist)
+LV_FUNC_ATTR lv_label_align_t lv_ddlist_get_align(const lv_obj_t * ddlist)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -438,7 +438,7 @@ LV_FUNC_OBJX_DDLIST_ATTR lv_label_align_t lv_ddlist_get_align(const lv_obj_t * d
  * @param ddlist pointer to drop down list object
  * @param anim_en LV_ANIM_EN: use animation; LV_ANIM_OFF: not use animations
  */
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_open(lv_obj_t * ddlist, lv_anim_enable_t anim)
+LV_FUNC_ATTR void lv_ddlist_open(lv_obj_t * ddlist, lv_anim_enable_t anim)
 {
 #if LV_USE_ANIMATION == 0
     anim = false;
@@ -454,7 +454,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_open(lv_obj_t * ddlist, lv_anim_enable_t
  * @param ddlist pointer to drop down list object
  * @param anim_en LV_ANIM_ON: use animation; LV_ANIM_OFF: not use animations
  */
-LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_close(lv_obj_t * ddlist, lv_anim_enable_t anim)
+LV_FUNC_ATTR void lv_ddlist_close(lv_obj_t * ddlist, lv_anim_enable_t anim)
 {
 #if LV_USE_ANIMATION == 0
     anim = false;
@@ -474,7 +474,7 @@ LV_FUNC_OBJX_DDLIST_ATTR void lv_ddlist_close(lv_obj_t * ddlist, lv_anim_enable_
  * @param ddlist drop down list
  * @return text alignment flag
  */
-LV_FUNC_OBJX_DDLIST_ATTR static lv_txt_flag_t lv_ddlist_get_txt_flag(const lv_obj_t * ddlist)
+LV_FUNC_ATTR static lv_txt_flag_t lv_ddlist_get_txt_flag(const lv_obj_t * ddlist)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -501,7 +501,7 @@ LV_FUNC_OBJX_DDLIST_ATTR static lv_txt_flag_t lv_ddlist_get_txt_flag(const lv_ob
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_DDLIST_ATTR static bool lv_ddlist_design(lv_obj_t * ddlist, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_ddlist_design(lv_obj_t * ddlist, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /*Return false if the object is not covers the mask_p area*/
     if(mode == LV_DESIGN_COVER_CHK) {
@@ -616,7 +616,7 @@ LV_FUNC_OBJX_DDLIST_ATTR static bool lv_ddlist_design(lv_obj_t * ddlist, const l
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_DDLIST_ATTR static lv_res_t lv_ddlist_signal(lv_obj_t * ddlist, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_ddlist_signal(lv_obj_t * ddlist, lv_signal_t sign, void * param)
 {
     lv_res_t res;
     /* Include the ancient signal function */
@@ -719,7 +719,7 @@ LV_FUNC_OBJX_DDLIST_ATTR static lv_res_t lv_ddlist_signal(lv_obj_t * ddlist, lv_
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_DDLIST_ATTR static lv_res_t lv_ddlist_scrl_signal(lv_obj_t * scrl, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_ddlist_scrl_signal(lv_obj_t * scrl, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -753,7 +753,7 @@ LV_FUNC_OBJX_DDLIST_ATTR static lv_res_t lv_ddlist_scrl_signal(lv_obj_t * scrl, 
  * @param ddlist pointer to a drop down list object
  * @return LV_ACTION_RES_INV if the ddlist it deleted in the user callback else LV_ACTION_RES_OK
  */
-LV_FUNC_OBJX_DDLIST_ATTR static lv_res_t release_handler(lv_obj_t * ddlist)
+LV_FUNC_ATTR static lv_res_t release_handler(lv_obj_t * ddlist)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -824,7 +824,7 @@ LV_FUNC_OBJX_DDLIST_ATTR static lv_res_t release_handler(lv_obj_t * ddlist)
  * @param ddlist pointer to a drop down list object
  * @param anim Change the size (open/close) with or without animation (true/false)
  */
-LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_refr_size(lv_obj_t * ddlist, lv_anim_enable_t anim)
+LV_FUNC_ATTR static void lv_ddlist_refr_size(lv_obj_t * ddlist, lv_anim_enable_t anim)
 {
 #if LV_USE_ANIMATION == 0
     anim = false;
@@ -893,7 +893,7 @@ LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_refr_size(lv_obj_t * ddlist, lv_a
  * Called at end of list animation.
  * @param a pointer to the animation
  */
-LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_anim_ready_cb(lv_anim_t * a)
+LV_FUNC_ATTR static void lv_ddlist_anim_ready_cb(lv_anim_t * a)
 {
     lv_obj_t * ddlist = a->var;
     lv_ddlist_anim_finish(ddlist);
@@ -903,7 +903,7 @@ LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_anim_ready_cb(lv_anim_t * a)
  * Clean up after the open animation
  * @param ddlist
  */
-LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_anim_finish(lv_obj_t * ddlist)
+LV_FUNC_ATTR static void lv_ddlist_anim_finish(lv_obj_t * ddlist)
 {
     lv_ddlist_ext_t * ext = lv_obj_get_ext_attr(ddlist);
 
@@ -918,7 +918,7 @@ LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_anim_finish(lv_obj_t * ddlist)
  * @param ddlist Drop down list object
  * @param height New drop down list height
  */
-LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_adjust_height(lv_obj_t * ddlist, lv_anim_value_t height)
+LV_FUNC_ATTR static void lv_ddlist_adjust_height(lv_obj_t * ddlist, lv_anim_value_t height)
 {
     lv_obj_set_height(ddlist, height);
     lv_ddlist_pos_current_option(ddlist);
@@ -929,7 +929,7 @@ LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_adjust_height(lv_obj_t * ddlist, 
  * Set the position of list when it is closed to show the selected item
  * @param ddlist pointer to a drop down list
  */
-LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_pos_current_option(lv_obj_t * ddlist)
+LV_FUNC_ATTR static void lv_ddlist_pos_current_option(lv_obj_t * ddlist)
 {
     lv_ddlist_ext_t * ext          = lv_obj_get_ext_attr(ddlist);
     const lv_style_t * style       = lv_obj_get_style(ddlist);
@@ -950,7 +950,7 @@ LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_pos_current_option(lv_obj_t * ddl
  * Be sure the width of the scrollable exactly fits the ddlist
  * @param ddlist pointer to a ddlist
  */
-LV_FUNC_OBJX_DDLIST_ATTR static void lv_ddlist_refr_width(lv_obj_t * ddlist)
+LV_FUNC_ATTR static void lv_ddlist_refr_width(lv_obj_t * ddlist)
 {
     /*Set the TIGHT fit horizontally the set the width to the content*/
     lv_page_set_scrl_fit2(ddlist, LV_FIT_TIGHT, lv_page_get_scrl_fit_bottom(ddlist));
